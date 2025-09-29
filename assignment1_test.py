@@ -174,7 +174,7 @@ if __name__ == "__main__":
     main()
 
 
-
+# Linprog executable file using sftp make a copy. Used to run on linprog.
 
 
 
