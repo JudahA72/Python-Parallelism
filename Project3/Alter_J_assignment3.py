@@ -33,11 +33,6 @@ def parse_cli(argv):
 def makeShape(size, value):
     return [[value for _ in range(size)] for _ in range(size)]
 
-def initializeActionGrid0(size, grid):
-    # Random init (NOT used for grading; but im keeping it in)
-    for i in range(size):
-        for j in range(size):
-            grid[i][j] = cooperate if (random.random() < 0.5) else defect
 
 def initializeActionGrid1(size, grid):
     # top half coop, bottom half defect
@@ -121,9 +116,9 @@ def run_simulation_seq(initF, size, steps, out_name):
                 actionGrid[i][j] = workGrid[i][j]
         
         # screen counts (should match the reference output)
-        coopCount = sum(1 for i in range(size) for j in range(size) if actionGrid[i][j] == cooperate)
-        defCount  = size*size - coopCount
-        print(f"step {ss}: {coopCount} cooperates, {defCount} defects")
+        coop = sum(1 for i in range(size) for j in range(size) if actionGrid[i][j] == cooperate)
+        defe = size*size - coop
+        print(f"step {ss}: {coop} cooperates, {defe} defects")
 
     with open(out_name, "w") as f:
         for i in range(size):
