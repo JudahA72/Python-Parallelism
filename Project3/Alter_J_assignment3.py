@@ -11,8 +11,8 @@ import sys  # system functions
 import random  # random number generation
 from time import perf_counter  # timing
 
-defect = 0  # defect action
-cooperate = 1  # cooperate action
+defect = 1  # defect action
+cooperate = 0  # cooperate action
 
 payoffMatrix = [  # payoff matrix
     [3, 0],
@@ -40,26 +40,26 @@ def initializeActionGrid0(size, grid):
             grid[i][j] = cooperate if (random.random() < 0.5) else defect
 
 def initializeActionGrid1(size, grid):
-    # Top half cooperate, bottom half defect.
+    # top half coop, bottom half defect
     for i in range(size):
         for j in range(size):
             grid[i][j] = cooperate if i < size/2 else defect
 
 def initializeActionGrid2(size, grid):
-    # All cooperate except the main diagonal which defects.
+    # all coop except main diagonal defects
     for i in range(size):
         for j in range(size):
             grid[i][j] = defect if i == j else cooperate
 
 def initializeActionGrid3(size, grid):
-    # All cooperate except the center cell which defects.
+    # all coop, one defect at center
     for i in range(size):
         for j in range(size):
             grid[i][j] = cooperate
     grid[size // 2][size // 2] = defect
 
 def initializeActionGrid4(size, grid):
-    # All cooperate except (1,1) which defects (or (0,0) if size==1
+    # all coop, one defect at (1,1) if it exists else (0,0)
     for i in range(size):
         for j in range(size):
             grid[i][j] = cooperate
@@ -68,22 +68,23 @@ def initializeActionGrid4(size, grid):
     else:
         grid[0][0] = defect
 
+
 def getNeighbors(i, j, size):
-    # Updated/correct neighbor function: 4-neighborhood (N,S,E,W), no wrap.
     neighbors = []
-    if i > 0:            neighbors.append((i-1, j))
-    if i + 1 < size:     neighbors.append((i+1, j))
-    if j + 1 < size:     neighbors.append((i, j+1))
-    if j > 0:            neighbors.append((i, j-1))
+    if i > 0:            neighbors.append((i-1, j))  # North
+    if i + 1 < size:     neighbors.append((i+1, j))  # South
+    if j + 1 < size:     neighbors.append((i, j+1))  # East
+    if j > 0:            neighbors.append((i, j-1))  # West
     return neighbors
 
 # Reward Computation
-def computeReward(i, j, actionGrid, gridSize):
-    # Sum PD payoff against N,S,E,W neighbors.
+def computeReward(i, j, actionGrid, size):
     myAction = actionGrid[i][j]
     total = 0
-    for ni, nj in getNeighbors(i, j, gridSize):
-        total += payoffMatrix[myAction][actionGrid[ni][nj]]
+    # my payoff against each neighbor (row = me, col = neighbor)
+    for ni, nj in getNeighbors(i, j, size):
+        neighborAction = actionGrid[ni][nj]
+        total += payoffMatrix[myAction][neighborAction]
     return total
 
 # Sequential simulation of the grid game
@@ -109,7 +110,7 @@ def run_simulation_seq(initF, size, steps, out_name):
                  bestReward = rewardGrid[i][j]
                  newAction = actionGrid[i][j]
                  for ii, jj in getNeighbors(i, j, size):
-                    if rewardGrid[ii][jj] > bestReward:  # STRICT >
+                    if rewardGrid[ii][jj] > bestReward:  
                         bestReward = rewardGrid[ii][jj]
                         newAction  = actionGrid[ii][jj]
                  workGrid[i][j] = newAction
