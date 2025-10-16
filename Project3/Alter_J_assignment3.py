@@ -136,7 +136,7 @@ def run_all(size, steps, nprocs):
     for initF, out_name in jobs:
         run_simulation_seq(initF, size, steps, out_name)
     t1 = perf_counter()
-    # Keep this timing line for your report; nprocs is accepted but unused here
+    
     print(f"Total time (all 4 sims): {t1 - t0:.3f} sec with nprocs={nprocs}")    
             
 if __name__ == "__main__":
